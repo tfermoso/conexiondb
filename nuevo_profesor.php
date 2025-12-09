@@ -12,6 +12,13 @@ if($areasResult->num_rows>0){
     }
 }
 
-var_dump($areas);
+$queryConsultas="SELECT consulta_id, dia_semana, hora_inicio, hora_fin FROM consulta ORDER BY dia_semana, hora_inicio";
+$consultasResult=$conn->query($queryConsultas); 
+$consultas=[];
+if($consultasResult->num_rows>0){
+    while($fila=$consultasResult->fetch_assoc()){
+        $consultas[]=$fila;
+    }
+}
 
 ?>
