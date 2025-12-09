@@ -76,17 +76,50 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["area_id"])) {
     <h2>Profesores del área: <?= htmlspecialchars($area_seleccionada); ?></h2>
 
     <?php if ($profesores->num_rows > 0): ?>
-        <ul>
+
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Despacho</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+
             <?php while ($p = $profesores->fetch_assoc()): ?>
-                <li>
-                    <strong><?= htmlspecialchars($p["nombre"]); ?></strong>
-                    — Despacho: <?= htmlspecialchars($p["despacho"]); ?>
-                </li>
+                <tr>
+                    <td><?= $p["profesor_id"]; ?></td>
+                    <td><?= htmlspecialchars($p["nombre"]); ?></td>
+                    <td><?= htmlspecialchars($p["despacho"]); ?></td>
+
+                    <td>
+                        <!-- Botón Editar -->
+                        <a 
+                            href="editar_profesor.php?id=<?= $p['profesor_id']; ?>" 
+                            style="padding:4px 8px; background:blue; color:white; text-decoration:none;">
+                            Editar
+                        </a>
+
+                        <!-- Botón Borrar -->
+                        <a 
+                            href="borrar_profesor.php?id=<?= $p['profesor_id']; ?>"
+                            onclick="return confirm('¿Seguro que quieres borrar este profesor?');"
+                            style="padding:4px 8px; background:red; color:white; text-decoration:none; margin-left:5px;">
+                            Borrar
+                        </a>
+                    </td>
+                </tr>
             <?php endwhile; ?>
-        </ul>
-    <?php else: ?>
-        <p>No hay profesores en esta área.</p>
-    <?php endif; ?>
+
+        </tbody>
+    </table>
+
+<?php else: ?>
+    <p>No hay profesores en esta área.</p>
+<?php endif; ?>
+
 <?php endif; ?>
 
 </body>
