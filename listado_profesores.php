@@ -1,12 +1,8 @@
 <?php
 require_once "config.php";
-// Crear conexión
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+require_once "./includes/functions.php";
 
-if ($conn->connect_error) {
-    die("Error en la conexión: " . $conn->connect_error);
-}
-
+$conn = conectarBaseDatos();
 // -------------------------------------------------------
 // 1. Obtener lista de áreas para el select (consulta segura)
 // -------------------------------------------------------

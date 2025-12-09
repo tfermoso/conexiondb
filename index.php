@@ -1,14 +1,8 @@
 <?php
 require_once "config.php";
+require_once "./includes/functions.php";
 
-// Crear conexión
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-// Comprobar conexión
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
-}
-
+$conn=conectarBaseDatos();
 $sql = "SELECT profesor_id, nombre, despacho, area_id, consultas_id 
         FROM profesor";
 
