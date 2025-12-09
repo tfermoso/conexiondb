@@ -1,4 +1,5 @@
 <?php
+session_start();
 if(isset($_GET["id"]) && $_GET["id"] !== ""){
     $id = intval($_GET["id"]);
     require_once "config.php";
@@ -9,9 +10,10 @@ if(isset($_GET["id"]) && $_GET["id"] !== ""){
     $stmt->execute();
     if($stmt->affected_rows > 0){
         header("Location: listado_profesores.php");
-        
+        $_SESSION["mensaje"] = "Profesor borrado exitosamente.";
     } else {
         header("Location: listado_profesores.php");
+        $_SESSION["mensaje"] = "Error al borrar el profesor.";
     } 
 
 }

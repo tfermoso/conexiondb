@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "config.php";
 require_once "./includes/functions.php";
 
@@ -16,11 +17,33 @@ $result_areas = $stmt_areas->get_result();
 // -------------------------------------------------------
 $profesores = [];
 $area_seleccionada = null;
+if($_SESSION['area_id'] ?? false){
+    $area_id = $_SESSION['area_id'];
+    // Obtener nombre del área seleccionada
+    $stmt_area_nombre = $conn->prepare("SELECT nombre FROM area WHERE area_id = ?");
+    $stmt_area_nombre->bind_param("i", $area_id);
+    $stmt_area_nombre->execute();
+    $result_area_nombre = $stmt_area_nombre->get_result();
+
+    if ($result_area_nombre->num_rows > 0) {
+        $area_seleccionada = $result_area_nombre->fetch_assoc()["nombre"];
+    }
+
+    // Obtener profesores de esa área
+    $stmt_prof = $conn->prepare("
+        SELECT profesor_id, nombre, despacho 
+        FROM profesor
+        WHERE area_id = ?
+    ");
+    $stmt_prof->bind_param("i", $area_id);
+    $stmt_prof->execute();
+    $profesores = $stmt_prof->get_result();
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["area_id"])) {
 
     $area_id = intval($_POST["area_id"]);
-
+    $_SESSION['area_id'] = $area_id;
     // Obtener nombre del área seleccionada
     $stmt_area_nombre = $conn->prepare("SELECT nombre FROM area WHERE area_id = ?");
     $stmt_area_nombre->bind_param("i", $area_id);
@@ -121,6 +144,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["area_id"])) {
 <?php endif; ?>
 
 <?php endif; ?>
+<?php
+if (isset($_SESSION["mensaje"])) {
+    echo "<p style='color:green;'>" . htmlspecialchars($_SESSION["mensaje"]) . "</p>";
+    unset($_SESSION["mensaje"]);
+}       
+?>
 
 </body>
 </html>
